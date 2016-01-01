@@ -1,4 +1,4 @@
-package game.rts.shaders;
+package game.rts.graphics;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;

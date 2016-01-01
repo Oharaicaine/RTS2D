@@ -1,27 +1,8 @@
 package game.rts.main;
 
-import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
-import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
-import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
-import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
-import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
-import static org.lwjgl.glfw.GLFW.glfwPollEvents;
-import static org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback;
-import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
-import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
-import static org.lwjgl.glfw.GLFW.glfwShowWindow;
-import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
-import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
-import static org.lwjgl.glfw.GLFW.glfwWindowHint;
-import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_TRUE;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import org.lwjgl.glfw.GLFWCursorPosCallback;
@@ -29,8 +10,12 @@ import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
+import game.rts.graphics.Shader;
 import game.rts.input.KeyboardInput;
 import game.rts.input.MouseInput;
+import game.rts.maths.Matrix4f;
+import game.rts.player.Player;
+import game.rts.world.World;
 
 
 public class Main implements Runnable{
@@ -44,6 +29,9 @@ public class Main implements Runnable{
 	public long window;
 	public static int width = 1200;
 	public static int height = 800;
+	
+	private World world;
+	private Player player;
 
 	public static void main(String[] args) {
 		Main game = new Main();
@@ -57,11 +45,14 @@ public class Main implements Runnable{
 	}
 	
 	public void init(){
-		
+		world = new World();
+		player = new Player();
 	}
 	
 	public void update(){
 		glfwPollEvents();	
+		world.update();
+		player.update();
 	}
 	
 	public void render(){
@@ -70,11 +61,15 @@ public class Main implements Runnable{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		//-----
 		
+		world.render();
+		player.render();
+		
 	}
 	
 	@Override
 	public void run() {
 		loadOpenGL();
+		loadShaders();
 		init();
 		
 		long lastTime = System.nanoTime();
@@ -107,6 +102,20 @@ public class Main implements Runnable{
 		keyCallBack.release();
 		mouseCallBack.release();
 	}
+	private void loadShaders() {
+		Shader.loadAll();
+		Shader.Basic.enable();
+		Matrix4f pr_matrix = Matrix4f.orthographic(-10.0f, 10.0f, -10.0f*9.0f/16.0f, 10.0f*9.0f/16.0f, -1.0f, 1.0f);
+		Shader.Basic.setUniformMat4f("pr_matrix", pr_matrix);
+		Shader.Basic.setUniform1i("tex", 1);
+		Shader.Basic.disable();
+		
+		Shader.Player.enable();
+		Shader.Player.setUniformMat4f("pr_matrix", pr_matrix);
+		Shader.Player.setUniform1i("tex", 1);
+		Shader.Player.disable();
+		
+	}
 	private void loadOpenGL() {
 		if(glfwInit() != GL_TRUE){
 			System.err.println("glfw Init failed");
@@ -131,6 +140,8 @@ public class Main implements Runnable{
 		GL.createCapabilities();
 		glClearColor(1f, 1f, 1f, 1f);
 		glEnable(GL_DEPTH_TEST);
+		
+		glActiveTexture(GL_TEXTURE1);
 		
 	}
 

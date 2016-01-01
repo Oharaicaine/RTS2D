@@ -1,4 +1,4 @@
-package game.rts.shaders;
+package game.rts.graphics;
 
 import static org.lwjgl.opengl.GL20.*;
 
@@ -15,12 +15,19 @@ public class Shader {
 	public static final int VERTEX_ATTRIB = 0;
 	public static final int TCOORD_ATTRIB = 1;
 	
+	public static Shader Basic, Player;
+	
 	private final int ID;
 	
 	private Map<String, Integer> locationCache = new HashMap<String, Integer>();
 	
 	public Shader(String vertex, String fargment) {
 		ID = ShaderUtils.load(vertex, fargment);
+	}
+	
+	public static void loadAll(){
+		Basic = new Shader("shaders/basicShader.vert", "shaders/basicShader.frag");
+		Player = new Shader("shaders/playerShader.vert", "shaders/playerShader.frag");
 	}
 	
 	public int getUniform(String name){
