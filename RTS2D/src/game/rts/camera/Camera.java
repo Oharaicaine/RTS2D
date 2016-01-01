@@ -7,7 +7,7 @@ import game.rts.maths.Vector3f;
 
 public class Camera {
 	
-	private Vector3f position = new Vector3f(0, 0, 0);
+	private Vector3f position = new Vector3f();
 	private float pitch;
 	private float yaw;
 	private float roll;
