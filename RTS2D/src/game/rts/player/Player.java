@@ -8,6 +8,7 @@ import game.rts.graphics.VertexArray;
 import game.rts.input.KeyboardInput;
 import game.rts.maths.Matrix4f;
 import game.rts.maths.Vector3f;
+import game.rts.utils.Index;
 
 public class Player {
 	
@@ -20,26 +21,7 @@ public class Player {
 	private float delta = 0.0f;
 
 	public Player() {
-		float[] vertices = new float[]{
-			-SIZE / 2, -SIZE / 2, 0.1f,
-			-SIZE / 2, SIZE / 2, 0.1f,
-			SIZE / 2, SIZE / 2, 0.1f,
-			SIZE / 2, -SIZE / 2, 0.1f
-		};
-		
-		byte[] indices = new byte[]{
-			0,1,2,
-			2,3,0
-		};
-		
-		float[] textureCoords = new float[]{
-			0,1,
-			0,0,
-			1,0,
-			1,1
-		};
-		
-		mesh = new VertexArray(vertices, indices, textureCoords);
+		mesh = new VertexArray(Index.vertcies(1f, 0.1f), Index.indices(), Index.tcs());
 		texture = new Texture("res/player.png");
 	}
 	
@@ -56,7 +38,7 @@ public class Player {
 	
 	public void render(){
 		Shader.Player.enable();
-		Shader.Player.setUniformMat4f("ml_matrix", Matrix4f.translate(position));
+		Shader.Player.setUniformMat4f("view_matrix", Matrix4f.translate(position));
 		texture.bind();
 		mesh.render();
 		Shader.Player.disable();

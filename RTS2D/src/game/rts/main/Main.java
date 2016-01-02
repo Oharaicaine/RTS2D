@@ -10,6 +10,7 @@ import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
+import game.rts.camera.Camera;
 import game.rts.graphics.Shader;
 import game.rts.input.KeyboardInput;
 import game.rts.input.MouseInput;
@@ -32,6 +33,7 @@ public class Main implements Runnable{
 	
 	private World world;
 	private Player player;
+	private Camera camera;
 
 	public static void main(String[] args) {
 		Main game = new Main();
@@ -47,12 +49,14 @@ public class Main implements Runnable{
 	public void init(){
 		world = new World();
 		player = new Player();
+		camera = new Camera();
 	}
 	
 	public void update(){
 		glfwPollEvents();	
 		world.update();
 		player.update();
+		camera.update();
 	}
 	
 	public void render(){
@@ -106,12 +110,12 @@ public class Main implements Runnable{
 		Shader.loadAll();
 		Shader.Basic.enable();
 		Matrix4f pr_matrix = Matrix4f.orthographic(-10.0f, 10.0f, -10.0f*9.0f/16.0f, 10.0f*9.0f/16.0f, -1.0f, 1.0f);
-		Shader.Basic.setUniformMat4f("pr_matrix", pr_matrix);
+		Shader.Basic.setUniformMat4f("projection_matrix", pr_matrix);
 		Shader.Basic.setUniform1i("tex", 1);
 		Shader.Basic.disable();
 		
 		Shader.Player.enable();
-		Shader.Player.setUniformMat4f("pr_matrix", pr_matrix);
+		Shader.Player.setUniformMat4f("projection_matrix", pr_matrix);
 		Shader.Player.setUniform1i("tex", 1);
 		Shader.Player.disable();
 		
@@ -140,6 +144,8 @@ public class Main implements Runnable{
 		GL.createCapabilities();
 		glClearColor(1f, 1f, 1f, 1f);
 		glEnable(GL_DEPTH_TEST);
+		glEnable (GL_BLEND);
+		glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
 		glActiveTexture(GL_TEXTURE1);
 		
