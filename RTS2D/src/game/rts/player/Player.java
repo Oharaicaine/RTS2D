@@ -33,7 +33,7 @@ public class Player {
 	
 	
 	public void update(){
-		if(MouseButton.mouseOne){
+		if(MouseButton.mouseRight){
 			moveToX = (float) MouseInput.mouseX;
 			moveToY = (float) MouseInput.mouseY;
 		}

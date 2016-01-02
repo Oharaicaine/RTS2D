@@ -8,6 +8,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
+import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
@@ -16,6 +17,7 @@ import game.rts.graphics.Shader;
 import game.rts.input.KeyboardInput;
 import game.rts.input.MouseButton;
 import game.rts.input.MouseInput;
+import game.rts.input.MouseScroll;
 import game.rts.maths.Matrix4f;
 import game.rts.player.Player;
 import game.rts.world.World;
@@ -29,6 +31,7 @@ public class Main implements Runnable{
 	private GLFWKeyCallback keyCallBack;
 	private GLFWCursorPosCallback mouseCallBack;
 	private GLFWMouseButtonCallback mouseButtonCallback;
+	private GLFWScrollCallback mouseScroll;
 	
 	public long window;
 	public static int width = 1200;
@@ -54,12 +57,27 @@ public class Main implements Runnable{
 		player = new Player();
 		camera = new Camera();
 	}
+	private float wid = Main.width;
+	private float Swid = 0.0f;
+	private float hig = Main.height;
+	private float Shig = 0.0f;
 	
 	public void update(){
 		glfwPollEvents();	
 		world.update();
 		player.update();
 		camera.update();
+		if(!MouseScroll.set){
+		wid += MouseScroll.scrollY*20;
+		hig += MouseScroll.scrollY*20;
+		Swid -= MouseScroll.scrollY*20;
+		Shig -= MouseScroll.scrollY*20;
+		Matrix4f pr_matrix = Matrix4f.orthographic(Swid, wid, Shig, hig, -1.0f, 1.0f);
+		Shader.Basic.enable();
+		Shader.Basic.setUniformMat4f("projection_matrix", pr_matrix);
+		Shader.Basic.disable();
+			MouseScroll.set = true;
+		}
 	}
 	
 	public void render(){
@@ -109,6 +127,7 @@ public class Main implements Runnable{
 		keyCallBack.release();
 		mouseCallBack.release();
 		mouseButtonCallback.release();
+		mouseScroll.release();
 	}
 	private void loadShaders() {
 		Shader.loadAll();
@@ -139,6 +158,7 @@ public class Main implements Runnable{
 		glfwSetKeyCallback(window, keyCallBack = new KeyboardInput());
 		glfwSetCursorPosCallback(window, mouseCallBack = new MouseInput());
 		glfwSetMouseButtonCallback(window, mouseButtonCallback = new MouseButton());
+		glfwSetScrollCallback(window, mouseScroll = new MouseScroll());
 		
 		GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		glfwSetWindowPos(window,+ (vidMode.width() - width) / 2,

@@ -12,7 +12,7 @@ import game.rts.utils.Index;
 
 public class Tiles {
 
-	protected static float size = 64.0f;
+	protected static float size = 128.0f;
 	protected VertexArray mesh;
 	protected Texture texture;
 	
