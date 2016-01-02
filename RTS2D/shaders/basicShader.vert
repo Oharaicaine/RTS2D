@@ -5,6 +5,7 @@ layout (location = 1) in vec2 tc;
 
 uniform mat4 projection_matrix;
 uniform mat4 view_matrix;
+uniform mat4 camera_matrix;
 
 out DATA
 {
@@ -13,7 +14,7 @@ out DATA
 
 void main()
 {
-	gl_Position = projection_matrix * view_matrix * position;
+	gl_Position = projection_matrix * view_matrix * camera_matrix * position;
 	vs_out.tc = tc;
 }
 

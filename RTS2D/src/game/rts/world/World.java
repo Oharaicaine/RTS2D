@@ -4,7 +4,9 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import game.rts.camera.Camera;
 import game.rts.graphics.Shader;
+import game.rts.main.Main;
 import game.rts.maths.Vector3f;
 import game.rts.tiles.Tiles;
 
@@ -13,14 +15,17 @@ import game.rts.utils.Utils;
 public class World {
 	
 	private BufferedImage map;
-	private int mapSize = 20;
+	private int mapSize = 100;
 	
-//	public static ArrayList<Tiles> tiles = new ArrayList<Tiles>();
+
+	public static ArrayList<Tiles> tiles = new ArrayList<Tiles>();
 	
 	public static CopyOnWriteArrayList<Tiles> worldMap = new CopyOnWriteArrayList<Tiles>();
+	public static CopyOnWriteArrayList<Tiles> cameraMap = new CopyOnWriteArrayList<Tiles>();
+	
 
 	public World() {	
-		map = Utils.loadBufferedImage("res/map.png");
+		map = Utils.loadBufferedImage("res/map2.png");
 		initMap();
 	}
 	
@@ -30,10 +35,10 @@ public class World {
 				int col = map.getRGB(x, y);
 				switch(col & 0xFFFFFF){
 					case 0x808080:
-						worldMap.add(new Tiles(new Vector3f(x-10.0f, y-10.0f, 0.0f)));
+						worldMap.add(new Tiles(new Vector3f((x*64), (y*64), 0.0f)));
 						break;
 					case 0x404040:
-						//worldMap.add(new Tiles(new Vector3f(x-10.0f, y-10.0f, 0.0f)));
+						worldMap.add(new Tiles(new Vector3f(x*64, y*64, 0.0f)));
 						break;	
 				}
 			}
@@ -42,13 +47,20 @@ public class World {
 	}
 
 	public void update(){
-
+		for(Tiles tiles: worldMap){
+			if(Utils.distanceBetweenVector3f(new Vector3f(Camera.position.x+(Main.width/2), Camera.position.y+(Main.height/2), 0), tiles.getPos()) < 600){
+				if(!cameraMap.contains(tiles))cameraMap.add(tiles);
+				
+			}else if(cameraMap.contains(tiles))cameraMap.remove(tiles);
+		}
 	}
 	
 	public void render(){
 		Shader.Basic.enable();
-		for(Tiles tiles : worldMap){
-			tiles.render();
+		if(!cameraMap.isEmpty()){
+			for(Tiles tile : cameraMap){
+				tile.render();
+			}
 		}
 		Shader.Basic.disable();
 	}

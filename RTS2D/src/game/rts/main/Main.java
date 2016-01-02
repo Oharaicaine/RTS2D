@@ -7,12 +7,14 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
+import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
 import game.rts.camera.Camera;
 import game.rts.graphics.Shader;
 import game.rts.input.KeyboardInput;
+import game.rts.input.MouseButton;
 import game.rts.input.MouseInput;
 import game.rts.maths.Matrix4f;
 import game.rts.player.Player;
@@ -26,6 +28,7 @@ public class Main implements Runnable{
 	
 	private GLFWKeyCallback keyCallBack;
 	private GLFWCursorPosCallback mouseCallBack;
+	private GLFWMouseButtonCallback mouseButtonCallback;
 	
 	public long window;
 	public static int width = 1200;
@@ -105,18 +108,20 @@ public class Main implements Runnable{
 		}
 		keyCallBack.release();
 		mouseCallBack.release();
+		mouseButtonCallback.release();
 	}
 	private void loadShaders() {
 		Shader.loadAll();
+		Matrix4f pr_matrix = Matrix4f.orthographic(0.0f, Main.width, 0.0f, Main.height, -1.0f, 1.0f);
+		
 		Shader.Basic.enable();
-		Matrix4f pr_matrix = Matrix4f.orthographic(-10.0f, 10.0f, -10.0f*9.0f/16.0f, 10.0f*9.0f/16.0f, -1.0f, 1.0f);
 		Shader.Basic.setUniformMat4f("projection_matrix", pr_matrix);
-		Shader.Basic.setUniform1i("tex", 1);
+		Shader.Basic.setUniform1i("tex", 0);
 		Shader.Basic.disable();
 		
 		Shader.Player.enable();
 		Shader.Player.setUniformMat4f("projection_matrix", pr_matrix);
-		Shader.Player.setUniform1i("tex", 1);
+		Shader.Player.setUniform1i("tex", 0);
 		Shader.Player.disable();
 		
 	}
@@ -133,6 +138,7 @@ public class Main implements Runnable{
 		
 		glfwSetKeyCallback(window, keyCallBack = new KeyboardInput());
 		glfwSetCursorPosCallback(window, mouseCallBack = new MouseInput());
+		glfwSetMouseButtonCallback(window, mouseButtonCallback = new MouseButton());
 		
 		GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		glfwSetWindowPos(window,+ (vidMode.width() - width) / 2,
@@ -147,7 +153,7 @@ public class Main implements Runnable{
 		glEnable (GL_BLEND);
 		glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
-		glActiveTexture(GL_TEXTURE1);
+		glActiveTexture(GL_TEXTURE0);
 		
 	}
 

@@ -2,6 +2,7 @@ package game.rts.input;
 
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;
 
 public class KeyboardInput extends GLFWKeyCallback{

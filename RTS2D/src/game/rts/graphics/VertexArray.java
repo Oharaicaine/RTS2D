@@ -39,22 +39,23 @@ public class VertexArray {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 	
-	public void bind(){
+	private void bind(){
 		glBindVertexArray(vao);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 	}
-	public void unbind(){
+	private void unbind(){
 		glBindVertexArray(0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 	
-	public void draw(){
+	private void draw(){
 		glDrawElements(GL_TRIANGLES, counts, GL_UNSIGNED_BYTE, 0);
 	}
 	
 	public void render(){
 		bind();
 		draw();
+		unbind();
 	}
 
 }

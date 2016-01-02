@@ -18,7 +18,7 @@ public class Index {
 	public static byte[] indices(){
 		byte[] indices = new byte[] {
 				0, 1, 2,
-				2, 3, 0	
+				2, 3, 0
 			};
 		return indices;
 	}

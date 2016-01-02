@@ -28,6 +28,12 @@ public class Utils {
 		return 0;
 	}
 	
+	public static float distanceBetweenVector3f(Vector3f vec1, Vector3f vec2){
+		float result = 0;
+		result = (float) Math.sqrt(Math.pow((vec2.getX() - vec1.getX()), 2) + Math.pow((vec2.getY() - vec1.getY()), 2));
+		return result;
+	}
+	
 	public static BufferedImage loadBufferedImage(String path){
 		try {
 			File file = new File(path);

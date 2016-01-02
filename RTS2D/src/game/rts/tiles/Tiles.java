@@ -2,6 +2,7 @@ package game.rts.tiles;
 
 import java.awt.geom.Rectangle2D;
 
+import game.rts.camera.Camera;
 import game.rts.graphics.Shader;
 import game.rts.graphics.Texture;
 import game.rts.graphics.VertexArray;
@@ -11,7 +12,7 @@ import game.rts.utils.Index;
 
 public class Tiles {
 
-	protected static float size = 1.0f;
+	protected static float size = 64.0f;
 	protected VertexArray mesh;
 	protected Texture texture;
 	
@@ -32,12 +33,11 @@ public class Tiles {
 	public void render() {
 
 		Shader.Basic.setUniformMat4f("view_matrix", Matrix4f.translate(pos));
+		Shader.Basic.setUniformMat4f("camera_matrix", Matrix4f.translate(new Vector3f(-Camera.position.x, -Camera.position.y, 0f)));
 		texture.bind();
-		mesh.bind();
 		mesh.render();
-		
 		texture.unbind();
-		mesh.unbind();
+
 
 	}
 	
