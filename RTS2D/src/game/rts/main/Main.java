@@ -13,6 +13,7 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
 import game.rts.camera.Camera;
+import game.rts.gamestates.GameStateManager;
 import game.rts.graphics.Shader;
 import game.rts.input.KeyboardInput;
 import game.rts.input.MouseButton;
@@ -37,9 +38,7 @@ public class Main implements Runnable{
 	public static int width = 1200;
 	public static int height = 800;
 	
-	private World world;
-	private Player player;
-	private Camera camera;
+	private GameStateManager gsm;
 
 	public static void main(String[] args) {
 		Main game = new Main();
@@ -53,31 +52,14 @@ public class Main implements Runnable{
 	}
 	
 	public void init(){
-		world = new World();
-		player = new Player();
-		camera = new Camera();
+		gsm = new GameStateManager();
 	}
-	private float wid = Main.width;
-	private float Swid = 0.0f;
-	private float hig = Main.height;
-	private float Shig = 0.0f;
 	
 	public void update(){
 		glfwPollEvents();	
-		world.update();
-		player.update();
-		camera.update();
-		if(!MouseScroll.set){
-		wid += MouseScroll.scrollY*20;
-		hig += MouseScroll.scrollY*20;
-		Swid -= MouseScroll.scrollY*20;
-		Shig -= MouseScroll.scrollY*20;
-		Matrix4f pr_matrix = Matrix4f.orthographic(Swid, wid, Shig, hig, -1.0f, 1.0f);
-		Shader.Basic.enable();
-		Shader.Basic.setUniformMat4f("projection_matrix", pr_matrix);
-		Shader.Basic.disable();
-			MouseScroll.set = true;
-		}
+		
+		gsm.update();
+		
 	}
 	
 	public void render(){
@@ -85,10 +67,7 @@ public class Main implements Runnable{
 		glfwSwapBuffers(window);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		//-----
-		
-		world.render();
-		player.render();
-		
+		gsm.render();
 	}
 	
 	@Override

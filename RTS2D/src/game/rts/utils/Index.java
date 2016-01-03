@@ -15,6 +15,17 @@ public class Index {
 		return vertices;
 	}
 	
+	public static float[] vertciesWightHeight(float width, float height, float renderDepth){
+		float[] vertices = new float[] {
+				-width / 2.0f, -height / 2.0f, renderDepth,
+				-width / 2.0f,  height / 2.0f, renderDepth,
+				width / 2.0f,  height / 2.0f, renderDepth,
+				width / 2.0f, -height / 2.0f, renderDepth
+			};
+	
+		return vertices;
+	}
+	
 	public static byte[] indices(){
 		byte[] indices = new byte[] {
 				0, 1, 2,
