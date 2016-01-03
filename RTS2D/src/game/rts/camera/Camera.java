@@ -9,6 +9,7 @@ import game.rts.input.MouseScroll;
 import game.rts.main.Main;
 import game.rts.maths.Matrix4f;
 import game.rts.maths.Vector3f;
+import game.rts.utils.Utils;
 
 public class Camera {
 	
@@ -25,7 +26,7 @@ public class Camera {
 	}
 	
 	public void update(){
-		
+		/*
 		if(!MouseScroll.set){
 			
 			double amount = MouseScroll.scrollY*30;
@@ -33,12 +34,19 @@ public class Camera {
 			height -= amount;
 			StartWidth += amount;
 			StartHeight += amount;
+			
+			if(width < Main.width)width = Main.width;
+			if(height < Main.height)height = Main.height;
+			if(StartWidth < 0)StartWidth = 0;
+			if(StartHeight < 0)StartHeight = 0;
+			
 			Matrix4f pr_matrix = Matrix4f.orthographic(StartWidth, width, StartHeight, height, -1.0f, 1.0f);
 			Shader.Basic.enable();
 			Shader.Basic.setUniformMat4f("projection_matrix", pr_matrix);
 			Shader.Basic.disable();
 			MouseScroll.set = true;
 		}
+		*/
 		
 		if(MouseInput.mouseScreenX > Main.width - 150){
 			position.x += 3f;
@@ -51,21 +59,6 @@ public class Camera {
 		}
 		if(MouseInput.mouseScreenY < 150){
 			position.y -= 3f;
-		}
-		
-		//System.out.println(MouseInput.mouseScreenY);
-		
-		if(KeyboardInput.keys[GLFW_KEY_W]){
-			position.y -= 2f;	
-		}
-		if(KeyboardInput.keys[GLFW_KEY_S]){
-			position.y += 2f;	
-		}
-		if(KeyboardInput.keys[GLFW_KEY_A]){
-			position.x += 2f;	
-		}
-		if(KeyboardInput.keys[GLFW_KEY_D]){
-			position.x -= 2f;	
 		}
 	}
 

@@ -15,7 +15,7 @@ import game.rts.utils.Utils;
 public class World {
 	
 	private BufferedImage map;
-	private int mapSize = 32;
+	private int mapSize = 100;
 	
 
 	public static ArrayList<Tiles> tiles = new ArrayList<Tiles>();
@@ -35,22 +35,21 @@ public class World {
 				int col = map.getRGB(x, y);
 				switch(col & 0xFFFFFF){
 					case 0x808080:
-						worldMap.add(new Tiles(new Vector3f(x*128, y*128, 0.0f)));
+						worldMap.add(new Tiles(new Vector3f(x*96, y*96, 0.0f)));
 						break;
 					case 0x404040:
-						worldMap.add(new Tiles(new Vector3f(x*128, y*128, 0.0f)));
+						worldMap.add(new Tiles(new Vector3f(x*96, y*96, 0.0f)));
 						break;	
 				}
 			}
-		}	
-		
+		}		
 	}
 
 	public void update(){
 		for(Tiles tiles: worldMap){
+			tiles.update();
 			if(Utils.distanceBetweenVector3f(new Vector3f(Camera.position.x+(Main.width/2), Camera.position.y+(Main.height/2), 0), tiles.getPos()) < 800){
-				if(!cameraMap.contains(tiles))cameraMap.add(tiles);
-				
+				if(!cameraMap.contains(tiles))cameraMap.add(tiles);	
 			}else if(cameraMap.contains(tiles))cameraMap.remove(tiles);
 		}
 	}

@@ -11,9 +11,9 @@ import game.rts.maths.Vector3f;
 public class Utils {
 
 	public static float lerp(float v0, float v1, float t) {
-		float result = ((1-t)*v0 + t*v1) * 0.05f;
-		if(result < -0.05f)result = -0.05f;
-		if(result > 0.05f)result = 0.05f;
+		float result = ((1-t)*v0 + t*v1);
+		//if(result < -0.05f)result = -0.05f;
+		//if(result > 0.05f)result = 0.05f;
 		  return result;
 	}
 

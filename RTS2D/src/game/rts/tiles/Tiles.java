@@ -8,11 +8,12 @@ import game.rts.graphics.Texture;
 import game.rts.graphics.VertexArray;
 import game.rts.maths.Matrix4f;
 import game.rts.maths.Vector3f;
+import game.rts.utils.Assets;
 import game.rts.utils.Index;
 
 public class Tiles {
 
-	protected static float size = 128.0f;
+	protected float size = 96.0f;
 	protected VertexArray mesh;
 	protected Texture texture;
 	
@@ -22,8 +23,8 @@ public class Tiles {
 	public Tiles(Vector3f pos) {	
 		this.pos = pos;
 		bounds = new Rectangle2D.Float(pos.x - (size/2.0f), pos.y - (size/2.0f), size, size);
-		mesh = new VertexArray(Index.vertcies(size, 0.0f), Index.indices(), Index.tcs());
-		texture = new Texture("res/stonefloor.png");
+		mesh = Assets.getTileMesh();
+		texture = Assets.getStone();
 		
 	}
 	
@@ -41,7 +42,7 @@ public class Tiles {
 
 	}
 	
-	public static float getSize() {
+	public float getSize() {
 		return size;
 	}
 	

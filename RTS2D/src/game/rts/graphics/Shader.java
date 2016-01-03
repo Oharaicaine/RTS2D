@@ -15,7 +15,7 @@ public class Shader {
 	public static final int VERTEX_ATTRIB = 0;
 	public static final int TCOORD_ATTRIB = 1;
 	
-	public static Shader Basic, Player;
+	public static Shader Basic, Entity, Box;
 	
 	private final int ID;
 	
@@ -27,7 +27,8 @@ public class Shader {
 	
 	public static void loadAll(){
 		Basic = new Shader("shaders/basicShader.vert", "shaders/basicShader.frag");
-		Player = new Shader("shaders/playerShader.vert", "shaders/playerShader.frag");
+		Entity = new Shader("shaders/entityShader.vert", "shaders/entityShader.frag");
+		Box = new Shader("shaders/boxShader.vert", "shaders/boxShader.frag");
 	}
 	
 	public int getUniform(String name){

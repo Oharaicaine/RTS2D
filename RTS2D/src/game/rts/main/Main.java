@@ -12,7 +12,6 @@ import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
-import game.rts.camera.Camera;
 import game.rts.gamestates.GameStateManager;
 import game.rts.graphics.Shader;
 import game.rts.input.KeyboardInput;
@@ -20,14 +19,13 @@ import game.rts.input.MouseButton;
 import game.rts.input.MouseInput;
 import game.rts.input.MouseScroll;
 import game.rts.maths.Matrix4f;
-import game.rts.player.Player;
-import game.rts.world.World;
+import game.rts.utils.Assets;
 
 
 public class Main implements Runnable{
 	
 	private Thread thread;
-	public boolean running = false;
+	public static boolean running = false;
 	
 	private GLFWKeyCallback keyCallBack;
 	private GLFWCursorPosCallback mouseCallBack;
@@ -35,8 +33,8 @@ public class Main implements Runnable{
 	private GLFWScrollCallback mouseScroll;
 	
 	public long window;
-	public static int width = 1200;
-	public static int height = 800;
+	public static int width = 1280;//1920;
+	public static int height = 720;//1080;
 	
 	private GameStateManager gsm;
 
@@ -53,6 +51,7 @@ public class Main implements Runnable{
 	
 	public void init(){
 		gsm = new GameStateManager();
+		Assets.loadAll();
 	}
 	
 	public void update(){
@@ -114,20 +113,26 @@ public class Main implements Runnable{
 		
 		Shader.Basic.enable();
 		Shader.Basic.setUniformMat4f("projection_matrix", pr_matrix);
-		Shader.Basic.setUniform1i("tex", 0);
+		Shader.Basic.setUniform1i("tex", 1);
 		Shader.Basic.disable();
 		
-		Shader.Player.enable();
-		Shader.Player.setUniformMat4f("projection_matrix", pr_matrix);
-		Shader.Player.setUniform1i("tex", 0);
-		Shader.Player.disable();
+		Shader.Entity.enable();
+		Shader.Entity.setUniformMat4f("projection_matrix", pr_matrix);
+		Shader.Entity.setUniform1i("tex", 1);
+		Shader.Entity.disable();
+		
+		Shader.Box.enable();
+		Shader.Box.setUniformMat4f("projection_matrix", pr_matrix);
+		Shader.Box.setUniform1i("tex", 1);
+		Shader.Box.disable();
 		
 	}
 	private void loadOpenGL() {
 		if(glfwInit() != GL_TRUE){
 			System.err.println("glfw Init failed");
 		}
-		glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
+		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+		//glfwWindowHint(GLFW_DECORATED, GL_FALSE);
 		
 		window =  glfwCreateWindow(width, height, "Demo", NULL, NULL);
 		if(window== NULL){
@@ -152,7 +157,7 @@ public class Main implements Runnable{
 		glEnable (GL_BLEND);
 		glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
-		glActiveTexture(GL_TEXTURE0);
+		glActiveTexture(GL_TEXTURE1);
 		
 	}
 
